@@ -50,7 +50,7 @@ const Feature = ({ title, text, icon }: FeatureProps) => {
 export default function Features() {
   return (
     <Center>
-    <Box p={4} py={9} mt={10} width={'90%'}>
+    <Box p={4} py={9} mt={229} width={'90%'}>
       <Center>
         <Heading>Features</Heading>
       </Center>

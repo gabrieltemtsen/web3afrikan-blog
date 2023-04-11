@@ -57,7 +57,7 @@ interface NavbarProps {
             top={'25px'}
             left={'70px'}
             height={'45px'}
-            width={'278px'}
+            width={'289px'}
             textColor={'white.200'}
             fontWeight={600}
             lineHeight={'45.35px'}
@@ -65,7 +65,7 @@ interface NavbarProps {
             fontStyle={'outfit'}
             fontFamily={'outfit'}
           >
-            Web3AfricanBlog
+            Web3AfrikanBlog
           </Box>
            <DesktopNav/>
           <Box ml={9} pl={9} mx={-162}>

@@ -5,9 +5,11 @@ export const Governance = () =>{
     return (
         <>
          <Navbar/>
-        <Heading>Comming Sooon...</Heading>
+
+        <Heading textAlign={'center'}>Coming Sooon...</Heading>
 
         </>
        
     )
 }
+export default Governance;

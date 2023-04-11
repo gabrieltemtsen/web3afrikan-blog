@@ -16,7 +16,7 @@ import { Navbar } from "@/components";
 interface Article {
   id: number;
   title: string;
-  section: string;
+  category: string;
   image: string;
   description: string;
   date: string;
@@ -28,7 +28,29 @@ const articles: Article[] = [
   {
     id: 1,
     title: "Being a Web3 developer",
-    section: "Section A",
+    category: "Entertainment",
+    image: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80',
+    description: "Being a web3 developer i not easy take a look at this article",
+    date: 'July',
+    author: 'gabe.eth',
+    comments: 0,
+
+  },
+  {
+    id: 1,
+    title: "Being a Web3 developer",
+    category: "Entertainment",
+    image: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80',
+    description: "Being a web3 developer i not easy take a look at this article",
+    date: 'July',
+    author: 'gabe.eth',
+    comments: 0,
+
+  },
+  {
+    id: 1,
+    title: "Being a Web3 developer",
+    category: "Music",
     image: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80',
     description: "Being a web3 developer i not easy take a look at this article",
     date: 'July',
@@ -40,7 +62,7 @@ const articles: Article[] = [
 ];
 
 const BlogPage: React.FC = () => {
-  const sections = Array.from(new Set(articles.map((article) => article.section)));
+  const categorys = Array.from(new Set(articles.map((article) => article.category)));
 
   
   const [searchTerm, setSearchTerm] = useState("");
@@ -65,11 +87,11 @@ const BlogPage: React.FC = () => {
             </Center>
         
        
-        {sections.map((section) => (
-          <Box key={section} >
+        {categorys.map((category) => (
+          <Box key={category} >
             <Box borderBottom="1px" borderColor="gray.300" pb={2}>
               <Heading as="h2" size="lg">
-                {section}
+                {category}
               </Heading>
             </Box>
             <Grid
@@ -78,7 +100,7 @@ const BlogPage: React.FC = () => {
               mt={4}
             >
               {articles
-                .filter((article) => article.section === section)
+                .filter((article) => article.category === category)
                 .map((article) => (
                   <GridItem key={article.id}>
                     <Box
@@ -100,6 +122,8 @@ const BlogPage: React.FC = () => {
                       />
                       <Text fontSize="lg">{article.title}</Text>
                       <Text color={'gray.500'}>{article.description}</Text>
+                      <Text color={'gray.450'}>By: {article.author}</Text>
+                      <Text color={'gray.450'}>Posted: {article.date}</Text>
                     </Box>
                   </GridItem>
                 ))}
