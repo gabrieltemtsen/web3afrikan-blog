@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import {
   Box,
   Text,
@@ -27,15 +27,22 @@ import { MoonIcon, SearchIcon, SunIcon } from '@chakra-ui/icons';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 
+interface NavbarProps {
+  onSearchChange: (term: string) => void;
+}
 
 
 
- function Navbar() {
+ function Navbar<NavbarProps>({onSearchChange}: any) {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-   return
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm (e.target.value);
+    onSearchChange(searchTerm);
   };
+
   return (
     <>
       <Box bg={useColorModeValue('gray.200', 'gray.900')} px={4}>
@@ -66,7 +73,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
         <Input
           type="text"
           placeholder="Search"
-          onChange={handleSearch}
+          onChange={handleSearchChange}
         />
         <InputRightElement pointerEvents="none">
           <SearchIcon color="gray.500" />
@@ -144,7 +151,7 @@ const DesktopNav = () => {
     },
     {
       label: 'Governance',
-      href: '/market',
+      href: '/governance',
     },
     
   ]

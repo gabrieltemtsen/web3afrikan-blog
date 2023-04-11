@@ -1,6 +1,6 @@
 // pages/blog.tsx
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Container,
@@ -18,83 +18,43 @@ interface Article {
   title: string;
   section: string;
   image: string;
+  description: string;
+  date: string;
+  author: string;
+  comments: number;
 }
 
 const articles: Article[] = [
   {
     id: 1,
-    title: "Article 1",
+    title: "Being a Web3 developer",
     section: "Section A",
-    image: "https://via.placeholder.com/200",
+    image: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80',
+    description: "Being a web3 developer i not easy take a look at this article",
+    date: 'July',
+    author: 'gabe.eth',
+    comments: 0,
+
   },
-  {
-    id: 2,
-    title: "Article 2",
-    section: "Section B",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 3,
-    title: "Article 3",
-    section: "Section A",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 3,
-    title: "Article 3",
-    section: "Section A",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 3,
-    title: "Article 3",
-    section: "Section A",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 3,
-    title: "Article 3",
-    section: "Section A",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 3,
-    title: "Article 3",
-    section: "Section A",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 3,
-    title: "Article 3",
-    section: "Section A",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 3,
-    title: "Article 3",
-    section: "Section A",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 3,
-    title: "Article 3",
-    section: "Section A",
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 4,
-    title: "Article 4",
-    section: "Section B",
-    image: "https://via.placeholder.com/200",
-  },
+ 
 ];
 
 const BlogPage: React.FC = () => {
   const sections = Array.from(new Set(articles.map((article) => article.section)));
 
+  
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
+  };
+
+  const filteredArticles = articles.filter((article) =>
+    article.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <>
-    <Navbar/>
+    <Navbar onSearchChange={handleSearchChange}/>
     <Container maxW="xl" mt={8}>
       <VStack spacing={9} >
         
@@ -122,14 +82,16 @@ const BlogPage: React.FC = () => {
                 .map((article) => (
                   <GridItem key={article.id}>
                     <Box
-                      borderWidth={1}
-                      borderColor="gray.200"
                       borderRadius="md"
                       p={4}
                     >
                       <Box
                         w="100%"
                         h="120px"
+                        transition="0.3s ease-in-out"
+                        _hover={{
+                          transform: 'scale(1.05)',
+                        }}
                         bg={`url(${article.image})`}
                         bgSize="cover"
                         bgPosition="center"
@@ -137,6 +99,7 @@ const BlogPage: React.FC = () => {
                         mb={2}
                       />
                       <Text fontSize="lg">{article.title}</Text>
+                      <Text color={'gray.500'}>{article.description}</Text>
                     </Box>
                   </GridItem>
                 ))}
