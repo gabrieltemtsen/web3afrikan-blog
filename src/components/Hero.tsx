@@ -14,6 +14,7 @@ import {
     IconProps,
     useColorModeValue,
   } from '@chakra-ui/react';
+import Link from 'next/link';
   
   export default function Hero() {
     return (
@@ -56,6 +57,7 @@ import {
             <Stack
               spacing={{ base: 4, sm: 6 }}
               direction={{ base: 'column', sm: 'row' }}>
+                <Link href={'/createPost'}>
               <Button
                 rounded={'full'}
                 size={'lg'}
@@ -63,11 +65,15 @@ import {
                 px={6}
                 colorScheme={'red'}
                 bg={'blue.400'}
+                
                 leftIcon={<EditIcon h={4} w={4} color={'gray.300'} />}
                 _hover={{ bg: 'blue.500' }}>
+                 
                     
                Create Post
               </Button>
+              </Link>
+              <Link href={'/articles'}>
               <Button
                 rounded={'full'}
                 size={'lg'}
@@ -76,6 +82,7 @@ import {
                 leftIcon={<ViewIcon h={4} w={4} color={'gray.300'} />}>
                 Read Articles
               </Button>
+              </Link>
             </Stack>
           </Stack>
           <Flex

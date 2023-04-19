@@ -14,6 +14,10 @@ import {
   useColorModeValue,
   Container,
   VStack,
+  FormControl,
+  FormLabel,
+  Textarea,
+  Button,
 } from '@chakra-ui/react';
 import { Navbar } from "@/components";
 
@@ -149,6 +153,27 @@ const ArticleList = () => {
           tortor, mattis nec lacus non, placerat congue elit.
         </Text>
       </VStack>
+      <Divider marginTop="5" mb={5} />
+      <Heading> 2 Comments</Heading>
+      <Text>Comment by: gabe.eth</Text>
+      <Text>Comment: I like the post</Text>
+      <Divider marginTop="5" mb={5} />
+      <Text>Comment by: gabe.eth</Text>
+      <Text>Comment: I like the post</Text>
+      <Divider marginTop="5" mb={5} />
+
+      <Heading> Add Comment</Heading>
+
+      <FormControl mb={4}>
+                <FormLabel>comment</FormLabel>
+                <Textarea width={'50%'}
+                  // onChange={(e) => setBody(e.target.value)}
+                />
+              </FormControl>
+              <Button type="submit" colorScheme="teal">
+                Submit
+              </Button>
+
     </Container>
     </>
     
