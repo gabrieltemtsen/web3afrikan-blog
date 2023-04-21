@@ -1,15 +1,13 @@
-import { Navbar } from "@/components"
-import { Heading } from "@chakra-ui/react"
+import { Navbar } from '@/components'
+import { Heading } from '@chakra-ui/react'
 
-export const Governance = () =>{
-    return (
-        <>
-         <Navbar/>
+export const Governance = () => {
+  return (
+    <>
+      <Navbar />
 
-        <Heading textAlign={'center'}>Coming Sooon...</Heading>
-
-        </>
-       
-    )
+      <Heading textAlign={'center'}>Coming Sooon...</Heading>
+    </>
+  )
 }
-export default Governance;
+export default Governance

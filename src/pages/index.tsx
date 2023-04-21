@@ -19,7 +19,7 @@ export default function Home() {
       </Head>
       <Navbar />
       <Hero />
-      <Features/>
+      <Features />
     </>
   )
 }

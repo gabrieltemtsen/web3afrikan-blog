@@ -50,38 +50,36 @@ const Feature = ({ title, text, icon }: FeatureProps) => {
 export default function Features() {
   return (
     <Center>
-    <Box p={4} py={9} mt={229} width={'90%'}>
-      <Center>
-        <Heading>Features</Heading>
-      </Center>
-      <SimpleGrid
-        columns={{ base: 1, md: 3 }}
-        spacing={10}
-        py={9}
-        mt={9}
-        ml={9}
-        px={5}
-        mr={9}
-      >
-        <Feature
-          icon={<Icon as={FcEditImage} w={10} h={10} />}
-          title={'Create Post'}
-          text={
-            'Write and Upload Blog Posts on the Platform'
-          }
-        />
-        <Feature
-          icon={<Icon as={FcReadingEbook} w={10} h={10} />}
-          title={'Read and Comment on Blogs'}
-          text={'Read blog posts and comments on the platform.'}
-        />
-        <Feature
-          icon={<Icon as={FcApprove} w={10} h={10} />}
-          title={'Vote Blog Content Policy '}
-          text={'Control the contents of the Platform'}
-        />
-      </SimpleGrid>
-    </Box>
+      <Box p={4} py={9} mt={229} width={'90%'}>
+        <Center>
+          <Heading>Features</Heading>
+        </Center>
+        <SimpleGrid
+          columns={{ base: 1, md: 3 }}
+          spacing={10}
+          py={9}
+          mt={9}
+          ml={9}
+          px={5}
+          mr={9}
+        >
+          <Feature
+            icon={<Icon as={FcEditImage} w={10} h={10} />}
+            title={'Create Post'}
+            text={'Write and Upload Blog Posts on the Platform'}
+          />
+          <Feature
+            icon={<Icon as={FcReadingEbook} w={10} h={10} />}
+            title={'Read and Comment on Blogs'}
+            text={'Read blog posts and comments on the platform.'}
+          />
+          <Feature
+            icon={<Icon as={FcApprove} w={10} h={10} />}
+            title={'Vote Blog Content Policy '}
+            text={'Control the contents of the Platform'}
+          />
+        </SimpleGrid>
+      </Box>
     </Center>
   )
 }

@@ -1,15 +1,12 @@
 import '@/styles/globals.css'
 import { ChakraProvider } from '@chakra-ui/react'
 import type { AppProps } from 'next/app'
-import '@rainbow-me/rainbowkit/styles.css';
-import {
-  getDefaultWallets,
-  RainbowKitProvider,
-} from '@rainbow-me/rainbowkit';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { sepolia } from 'wagmi/chains';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { publicProvider } from 'wagmi/providers/public';
+import '@rainbow-me/rainbowkit/styles.css'
+import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { configureChains, createClient, WagmiConfig } from 'wagmi'
+import { sepolia } from 'wagmi/chains'
+import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { publicProvider } from 'wagmi/providers/public'
 
 import { extendTheme } from '@chakra-ui/react'
 
@@ -24,32 +21,31 @@ const { chains, provider } = configureChains(
   [sepolia],
   [
     alchemyProvider({ apiKey: 'ez0IGO__H3UGwJ4LPEjuLw3n1q7-GTWd' }),
-    publicProvider()
-  ]
-);
+    publicProvider(),
+  ],
+)
 
 const { connectors } = getDefaultWallets({
   appName: 'Web3Afrikan',
-  chains
-});
+  chains,
+})
 
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
-  provider
+  provider,
 })
 
 const theme = extendTheme({ colors })
 
-
 export default function App({ Component, pageProps }: AppProps) {
-   return (
+  return (
     <WagmiConfig client={wagmiClient}>
-    <RainbowKitProvider chains={chains}>
-    <ChakraProvider  theme={theme} >
-      <Component {...pageProps} />
-    </ChakraProvider>
-    </RainbowKitProvider>
+      <RainbowKitProvider chains={chains}>
+        <ChakraProvider theme={theme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </RainbowKitProvider>
     </WagmiConfig>
   )
 }

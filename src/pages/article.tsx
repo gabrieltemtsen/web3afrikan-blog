@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   Box,
   Heading,
@@ -18,13 +18,12 @@ import {
   FormLabel,
   Textarea,
   Button,
-} from '@chakra-ui/react';
-import { Navbar } from "@/components";
-
+} from '@chakra-ui/react'
+import { Navbar } from '@/components'
 
 interface IBlogTags {
-  tags: Array<string>;
-  marginTop?: SpaceProps['marginTop'];
+  tags: Array<string>
+  marginTop?: SpaceProps['marginTop']
 }
 
 const BlogTags: React.FC<IBlogTags> = (props) => {
@@ -35,15 +34,15 @@ const BlogTags: React.FC<IBlogTags> = (props) => {
           <Tag size={'md'} variant="solid" colorScheme="orange" key={tag}>
             {tag}
           </Tag>
-        );
+        )
       })}
     </HStack>
-  );
-};
+  )
+}
 
 interface BlogAuthorProps {
-  date: Date;
-  name: string;
+  date: Date
+  name: string
 }
 
 export const BlogAuthor: React.FC<BlogAuthorProps> = (props) => {
@@ -59,125 +58,132 @@ export const BlogAuthor: React.FC<BlogAuthorProps> = (props) => {
       <Text>—</Text>
       <Text>{props.date.toLocaleDateString()}</Text>
     </HStack>
-  );
-};
+  )
+}
 
 const ArticleList = () => {
   return (
     <>
-    <Navbar/>
-    <Container maxW={'7xl'} p="12">
-      <Heading as="h6">Read Article</Heading>
-      <Box
-        marginTop={{ base: '1', sm: '5' }}
-        display="flex"
-        flexDirection={{ base: 'column', sm: 'row' }}
-        justifyContent="space-between">
+      <Navbar />
+      <Container maxW={'7xl'} p="12">
+        <Heading as="h6">Read Article</Heading>
         <Box
+          marginTop={{ base: '1', sm: '5' }}
           display="flex"
-          flex="1"
-          marginRight="3"
-          position="relative"
-          alignItems="center">
+          flexDirection={{ base: 'column', sm: 'row' }}
+          justifyContent="space-between"
+        >
           <Box
-            width={{ base: '100%', sm: '85%' }}
-            zIndex="2"
-            marginLeft={{ base: '0', sm: '5%' }}
-            marginTop="5%">
-            <Link textDecoration="none" _hover={{ textDecoration: 'none' }}>
-              <Image
-                borderRadius="lg"
-                src={
-                  'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80'
-                }
-                alt="some good alt text"
-                objectFit="contain"
-              />
-            </Link>
-          </Box>
-          <Box zIndex="1" width="100%" position="absolute" height="100%">
-            
-          </Box>
-        </Box>
-        <Box
-          display="flex"
-          flex="1"
-          flexDirection="column"
-          justifyContent="center"
-          marginTop={{ base: '3', sm: '0' }}>
-          <Heading marginTop="1">
-            <Link textDecoration="none" _hover={{ textDecoration: 'none' }}>
-              Blog article title
-            </Link>
-          </Heading>
-          <Text
-            as="p"
-            marginTop="2"
-            color={useColorModeValue('gray.700', 'gray.200')}
-            fontSize="lg">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. 
-          </Text>
-          <Divider marginTop="5" mb={5} />
-          <Text>By: gabe.eth</Text>
-          <Text>Posted: 2023-04-06T19:01:27Z</Text>
-        </Box>
-      </Box>
-     
-      <Divider marginTop="5" />
-      
-      <VStack paddingTop="40px" spacing="2" alignItems="flex-start">
-        <Heading as="h2">What we write about</Heading>
-        <Text as="p" fontSize="lg">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
-          pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
-          imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
-          sapien. Suspendisse placerat vulputate posuere. Curabitur neque
-          tortor, mattis nec lacus non, placerat congue elit.
-        </Text>
-        <Text as="p" fontSize="lg">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
-          pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
-          imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
-          sapien. Suspendisse placerat vulputate posuere. Curabitur neque
-          tortor, mattis nec lacus non, placerat congue elit.
-        </Text>
-        <Text as="p" fontSize="lg">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
-          pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
-          imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
-          sapien. Suspendisse placerat vulputate posuere. Curabitur neque
-          tortor, mattis nec lacus non, placerat congue elit.
-        </Text>
-      </VStack>
-      <Divider marginTop="5" mb={5} />
-      <Heading> 2 Comments</Heading>
-      <Text>Comment by: gabe.eth</Text>
-      <Text>Comment: I like the post</Text>
-      <Divider marginTop="5" mb={5} />
-      <Text>Comment by: gabe.eth</Text>
-      <Text>Comment: I like the post</Text>
-      <Divider marginTop="5" mb={5} />
-
-      <Heading> Add Comment</Heading>
-
-      <FormControl mb={4}>
-                <FormLabel>comment</FormLabel>
-                <Textarea width={'50%'}
-                  // onChange={(e) => setBody(e.target.value)}
+            display="flex"
+            flex="1"
+            marginRight="3"
+            position="relative"
+            alignItems="center"
+          >
+            <Box
+              width={{ base: '100%', sm: '85%' }}
+              zIndex="2"
+              marginLeft={{ base: '0', sm: '5%' }}
+              marginTop="5%"
+            >
+              <Link textDecoration="none" _hover={{ textDecoration: 'none' }}>
+                <Image
+                  borderRadius="lg"
+                  src={
+                    'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80'
+                  }
+                  alt="some good alt text"
+                  objectFit="contain"
                 />
-              </FormControl>
-              <Button type="submit" colorScheme="teal">
-                Submit
-              </Button>
+              </Link>
+            </Box>
+            <Box
+              zIndex="1"
+              width="100%"
+              position="absolute"
+              height="100%"
+            ></Box>
+          </Box>
+          <Box
+            display="flex"
+            flex="1"
+            flexDirection="column"
+            justifyContent="center"
+            marginTop={{ base: '3', sm: '0' }}
+          >
+            <Heading marginTop="1">
+              <Link textDecoration="none" _hover={{ textDecoration: 'none' }}>
+                Blog article title
+              </Link>
+            </Heading>
+            <Text
+              as="p"
+              marginTop="2"
+              color={useColorModeValue('gray.700', 'gray.200')}
+              fontSize="lg"
+            >
+              Lorem Ipsum is simply dummy text of the printing and typesetting
+              industry.
+            </Text>
+            <Divider marginTop="5" mb={5} />
+            <Text>By: gabe.eth</Text>
+            <Text>Posted: 2023-04-06T19:01:27Z</Text>
+          </Box>
+        </Box>
 
-    </Container>
+        <Divider marginTop="5" />
+
+        <VStack paddingTop="40px" spacing="2" alignItems="flex-start">
+          <Heading as="h2">What we write about</Heading>
+          <Text as="p" fontSize="lg">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+            condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
+            pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
+            imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
+            sapien. Suspendisse placerat vulputate posuere. Curabitur neque
+            tortor, mattis nec lacus non, placerat congue elit.
+          </Text>
+          <Text as="p" fontSize="lg">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+            condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
+            pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
+            imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
+            sapien. Suspendisse placerat vulputate posuere. Curabitur neque
+            tortor, mattis nec lacus non, placerat congue elit.
+          </Text>
+          <Text as="p" fontSize="lg">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+            condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
+            pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
+            imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
+            sapien. Suspendisse placerat vulputate posuere. Curabitur neque
+            tortor, mattis nec lacus non, placerat congue elit.
+          </Text>
+        </VStack>
+        <Divider marginTop="5" mb={5} />
+        <Heading> 2 Comments</Heading>
+        <Text>Comment by: gabe.eth</Text>
+        <Text>Comment: I like the post</Text>
+        <Divider marginTop="5" mb={5} />
+        <Text>Comment by: gabe.eth</Text>
+        <Text>Comment: I like the post</Text>
+        <Divider marginTop="5" mb={5} />
+
+        <Heading> Add Comment</Heading>
+
+        <FormControl mb={4}>
+          <FormLabel>comment</FormLabel>
+          <Textarea
+            width={'50%'}
+            // onChange={(e) => setBody(e.target.value)}
+          />
+        </FormControl>
+        <Button type="submit" colorScheme="teal">
+          Submit
+        </Button>
+      </Container>
     </>
-    
-  );
-};
+  )
+}
 
-export default ArticleList;
+export default ArticleList
