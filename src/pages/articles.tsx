@@ -1,6 +1,7 @@
 // pages/blog.tsx
 
 import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
 import {
   Box,
   Container,
@@ -10,6 +11,7 @@ import {
   Grid,
   GridItem,
   Center,
+  
 } from '@chakra-ui/react'
 import { Navbar } from '@/components'
 import { readContract } from '@wagmi/core'
@@ -19,6 +21,7 @@ import {
 } from '@/contracts/constants'
 import axios from 'axios'
 import { getJSONFromCID } from '@/utils/gateway'
+import { useRouter } from 'next/router'
 
 interface Article {
   id: number
@@ -101,6 +104,7 @@ const BlogPage = () => {
   const [allPosts, setAllPosts] = useState<PostDetail[]>([])
   const [noOfPosts, setNoOfPosts] = useState<number>(0)
 
+
   const categories = Array.from(
     new Set(allPosts.map((post) => post.postCategory)),
   )
@@ -112,86 +116,89 @@ const BlogPage = () => {
   const filteredArticles = articles.filter((article) =>
     article.title.toLowerCase().includes(searchTerm.toLowerCase()),
   )
-  console.log(noOfPosts)
 
   const getAllPosts = async () => {
-    const allPostsAddresses: any = await readContract({
-      address: BLOG_MANAGER_CONTRACT_ADDRESS,
-      abi: BLOG_MANAGER_ABI,
-      functionName: 'getPosts',
-    })
-
-    const allPosts: any = await readContract({
-      address: BLOG_MANAGER_CONTRACT_ADDRESS,
-      abi: BLOG_MANAGER_ABI,
-      functionName: 'getPostsData',
-      args: [allPostsAddresses],
-    })
-    console.log(allPosts)
-    setNoOfPosts(allPosts.posterAddress.length)
-
-    let new_posts = []
-    //iterate and loop through the data retrieve from the blockchain
-    for (let i = 0; i < allPosts.posterAddress.length; i++) {
-      let posterWalletAddress: string = allPosts.posterAddress[i]
-      let noOfComments: number = allPosts.numberOfComments[i].toNumber()
-      let postSCAddress = allPostsAddresses[i]
-
-      //get postId
-      const postId: any = await readContract({
+    try {
+      const allPostsAddresses: any = await readContract({
         address: BLOG_MANAGER_CONTRACT_ADDRESS,
         abi: BLOG_MANAGER_ABI,
-        functionName: 'postIDs',
-        args: [postSCAddress],
+        functionName: 'getPosts',
       })
-
-      if (allPosts.postCID !== 0) {
-        //get file data using axios from url
-        // const seeData = await getJSONFromCID(allPosts.postCID)
-        // console.log(`SEE ohh: `, seeData)
-        let config: any = {
-          method: 'get',
-          url: `https://${allPosts.postCID}.ipfs.w3s.link/post.json`,
-          headers: {},
+  
+      const allPosts: any = await readContract({
+        address: BLOG_MANAGER_CONTRACT_ADDRESS,
+        abi: BLOG_MANAGER_ABI,
+        functionName: 'getPostsData',
+        args: [allPostsAddresses],
+      })
+      setLatestCid(allPosts.postCID);
+      setNoOfPosts(allPosts.posterAddress.length)
+  
+      let new_posts = []
+      //iterate and loop through the data retrieve from the blockchain
+      for (let i = 0; i < allPosts.posterAddress.length; i++) {
+        let posterWalletAddress: string = allPosts.posterAddress[i]
+        let noOfComments: number = allPosts.numberOfComments[i].toNumber()
+        let postSCAddress = allPostsAddresses[i]
+  
+        //get postId
+        const postId: any = await readContract({
+          address: BLOG_MANAGER_CONTRACT_ADDRESS,
+          abi: BLOG_MANAGER_ABI,
+          functionName: 'postIDs',
+          args: [postSCAddress],
+        })
+  
+        if (allPosts.postCID !== 0) {
+          //get file data using axios from url
+          // const seeData = await getJSONFromCID(allPosts.postCID)
+          let config: any = {
+            method: 'get',
+            url: `https://${allPosts.postCID}.ipfs.w3s.link/post.json`,
+            headers: {},
+          }
+          const axiosResponse = await axios(config)
+  
+          const postDataObject: Post[] = axiosResponse.data
+  
+          const getCurrentPostTitle = postDataObject.filter(
+            (data) => data.post_ID === postId.toNumber(),
+          )[0].post_title
+          const getCurrentPostContent = postDataObject.filter(
+            (data) => data.post_ID === postId.toNumber(),
+          )[0].post_content
+          const getCurrentPostDescription = postDataObject.filter(
+            (data) => data.post_ID === postId.toNumber(),
+          )[0].post_description
+          const getCurrentPostCategory = postDataObject.filter(
+            (data) => data.post_ID === postId.toNumber(),
+          )[0].post_category
+          const getCurrentPostImage = postDataObject.filter(
+            (data) => data.post_ID === postId.toNumber(),
+          )[0].post_image
+  
+          //Data of each Post
+          let newPost: PostDetail = {
+            postTitle: getCurrentPostTitle,
+            postImage: getCurrentPostImage,
+            postDescription: getCurrentPostDescription,
+            postContent: getCurrentPostContent,
+            postCategory: getCurrentPostCategory,
+            postId: postId.toNumber(),
+            posterWalletAddress, //user wallet address
+            noOfComments,
+            postSCAddress, //Post smart contract address
+            comments: [],
+          }
+          new_posts.push(newPost)
         }
-        const axiosResponse = await axios(config)
-        // console.log(axiosResponse)
-
-        const postDataObject: Post[] = axiosResponse.data
-
-        const getCurrentPostTitle = postDataObject.filter(
-          (data) => data.post_ID === postId.toNumber(),
-        )[0].post_title
-        const getCurrentPostContent = postDataObject.filter(
-          (data) => data.post_ID === postId.toNumber(),
-        )[0].post_content
-        const getCurrentPostDescription = postDataObject.filter(
-          (data) => data.post_ID === postId.toNumber(),
-        )[0].post_description
-        const getCurrentPostCategory = postDataObject.filter(
-          (data) => data.post_ID === postId.toNumber(),
-        )[0].post_category
-        const getCurrentPostImage = postDataObject.filter(
-          (data) => data.post_ID === postId.toNumber(),
-        )[0].post_image
-
-        //Data of each Post
-        let newPost: PostDetail = {
-          postTitle: getCurrentPostTitle,
-          postImage: getCurrentPostImage,
-          postDescription: getCurrentPostDescription,
-          postContent: getCurrentPostContent,
-          postCategory: getCurrentPostCategory,
-          postId: postId.toNumber(),
-          posterWalletAddress, //user wallet address
-          noOfComments,
-          postSCAddress, //Post smart contract address
-          comments: [],
-        }
-        new_posts.push(newPost)
       }
+      setAllPosts(new_posts)
+      
+    } catch (error) {
+      console.log(error)
     }
-    setAllPosts(new_posts)
+   
   }
   useEffect(() => {
     getAllPosts()
@@ -208,6 +215,7 @@ const BlogPage = () => {
           </Center>
 
           {categories.map((category) => (
+             <>
             <Box key={category}>
               <Box borderBottom="1px" borderColor="gray.300" pb={2}>
                 <Heading as="h2" size="lg">
@@ -219,9 +227,21 @@ const BlogPage = () => {
                 gap={9}
                 mt={4}
               >
-                {allPosts
+               
+                {
+                allPosts
                   .filter((post) => post.postCategory === category)
                   .map((post) => (
+                    <>
+                    <Link  href={ {
+                        pathname: `/post/${post.postSCAddress}&${post.postId}`,
+                        query: {
+                          postSCAddress: post.postSCAddress,
+                          post_Id: post.postId,
+                        },
+                    
+                    }
+                      } >
                     <GridItem key={post.postId}>
                       <Box borderRadius="md" p={4}>
                         <Box
@@ -245,9 +265,12 @@ const BlogPage = () => {
                         <Text color={'gray.450'}>Posted: {}</Text>
                       </Box>
                     </GridItem>
+                    </Link>
+                    </>
                   ))}
               </Grid>
             </Box>
+            </>
           ))}
         </VStack>
       </Container>

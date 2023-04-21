@@ -1,6 +1,6 @@
 // pages/PostForm.tsx
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Container,
@@ -101,16 +101,18 @@ const PostForm: React.FC = () => {
       functionName: 'getPostsData',
       args: [allPostsAddresses],
     })
-
-    setNoOfPosts(allPosts.posterAddress.length)
+    setLatestCid(allPosts.postCID);
+    setNoOfPosts(allPosts.posterAddress.length);
+    console.log('Got')
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
 
-    await getAllPosts()
+   
     try {
+      await getAllPosts()
       const account = getAccount()
       if (!title || !category || !body || !description || !image) {
         return alert('Fill all the Fields')
@@ -118,6 +120,7 @@ const PostForm: React.FC = () => {
       const imageCid = await pushImgToStorage(image)
       console.log(imageCid)
       const storage = new Web3Storage({ token })
+      await getAllPosts()
 
       if (noOfPosts === 0) {
         const postObj: Post[] = [
@@ -168,7 +171,9 @@ const PostForm: React.FC = () => {
       } else {
         console.log(`latestCid`)
         //get existing file data from ipfs link
+        console.log(latestCid);
         await getAllPosts()
+
         let config: any = {
           method: 'get',
           url: `https://${latestCid}.ipfs.w3s.link/post.json`,
@@ -177,6 +182,7 @@ const PostForm: React.FC = () => {
         const axiosResponse = await axios(config)
         const postDataObject: Post[] = axiosResponse.data
         console.log(noOfPosts)
+      
 
         let postObj: Post = {
           post_ID: noOfPosts,
@@ -227,8 +233,9 @@ const PostForm: React.FC = () => {
       console.log(error)
     }
   }
-  console.log(noOfPosts)
-
+  useEffect(() => {
+    getAllPosts()
+  }, [noOfPosts])
   return (
     <>
       <Navbar />
