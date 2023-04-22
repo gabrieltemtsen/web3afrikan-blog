@@ -80,8 +80,8 @@ export const Post = () => {
   const [description, setDescription] = useState('')
 
   const getPostData = async () => {
-    if(!postCID) {
-      router.push('/article')
+    if(post) {
+      router.push('/articles')
     }
     try {
       const postCID: any = await readContract({
