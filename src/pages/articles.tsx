@@ -11,9 +11,8 @@ import {
   Grid,
   GridItem,
   Center,
-  
 } from '@chakra-ui/react'
-import { Navbar } from '@/components'
+import { Footer, Navbar } from '@/components'
 import { readContract } from '@wagmi/core'
 import {
   BLOG_MANAGER_ABI,
@@ -104,7 +103,6 @@ const BlogPage = () => {
   const [allPosts, setAllPosts] = useState<PostDetail[]>([])
   const [noOfPosts, setNoOfPosts] = useState<number>(0)
 
-
   const categories = Array.from(
     new Set(allPosts.map((post) => post.postCategory)),
   )
@@ -124,23 +122,23 @@ const BlogPage = () => {
         abi: BLOG_MANAGER_ABI,
         functionName: 'getPosts',
       })
-  
+
       const allPosts: any = await readContract({
         address: BLOG_MANAGER_CONTRACT_ADDRESS,
         abi: BLOG_MANAGER_ABI,
         functionName: 'getPostsData',
         args: [allPostsAddresses],
       })
-      setLatestCid(allPosts.postCID);
+      setLatestCid(allPosts.postCID)
       setNoOfPosts(allPosts.posterAddress.length)
-  
+
       let new_posts = []
       //iterate and loop through the data retrieve from the blockchain
       for (let i = 0; i < allPosts.posterAddress.length; i++) {
         let posterWalletAddress: string = allPosts.posterAddress[i]
         let noOfComments: number = allPosts.numberOfComments[i].toNumber()
         let postSCAddress = allPostsAddresses[i]
-  
+
         //get postId
         const postId: any = await readContract({
           address: BLOG_MANAGER_CONTRACT_ADDRESS,
@@ -148,7 +146,7 @@ const BlogPage = () => {
           functionName: 'postIDs',
           args: [postSCAddress],
         })
-  
+
         if (allPosts.postCID !== 0) {
           //get file data using axios from url
           // const seeData = await getJSONFromCID(allPosts.postCID)
@@ -158,9 +156,11 @@ const BlogPage = () => {
             headers: {},
           }
           const axiosResponse = await axios(config)
-  
+
           const postDataObject: Post[] = axiosResponse.data
-  
+
+          console.log(postDataObject)
+
           const getCurrentPostTitle = postDataObject.filter(
             (data) => data.post_ID === postId.toNumber(),
           )[0].post_title
@@ -176,7 +176,7 @@ const BlogPage = () => {
           const getCurrentPostImage = postDataObject.filter(
             (data) => data.post_ID === postId.toNumber(),
           )[0].post_image
-  
+
           //Data of each Post
           let newPost: PostDetail = {
             postTitle: getCurrentPostTitle,
@@ -194,11 +194,9 @@ const BlogPage = () => {
         }
       }
       setAllPosts(new_posts)
-      
     } catch (error) {
       console.log(error)
     }
-   
   }
   useEffect(() => {
     getAllPosts()
@@ -215,65 +213,66 @@ const BlogPage = () => {
           </Center>
 
           {categories.map((category) => (
-             <>
-            <Box key={category}>
-              <Box borderBottom="1px" borderColor="gray.300" pb={2}>
-                <Heading as="h2" size="lg">
-                  {category}
-                </Heading>
-              </Box>
-              <Grid
-                templateColumns="repeat(5, minmax(300px, 4fr))"
-                gap={9}
-                mt={4}
-              >
-               
-                {
-                allPosts
-                  .filter((post) => post.postCategory === category)
-                  .map((post) => (
-                    <>
-                    <Link  href={ {
-                        pathname: `/post/${post.postSCAddress}&${post.postId}`,
-                        query: {
-                          postSCAddress: post.postSCAddress,
-                          post_Id: post.postId,
-                        },
-                    
-                    }
-                      } >
-                    <GridItem key={post.postId}>
-                      <Box borderRadius="md" p={4}>
-                        <Box
-                          w="100%"
-                          h="120px"
-                          transition="0.3s ease-in-out"
-                          _hover={{
-                            transform: 'scale(1.05)',
+            <>
+              <Box key={category}>
+                <Box borderBottom="1px" borderColor="gray.300" pb={2}>
+                  <Heading as="h2" size="lg">
+                    {category}
+                  </Heading>
+                </Box>
+                <Grid
+                  templateColumns="repeat(5, minmax(300px, 4fr))"
+                  gap={9}
+                  mt={4}
+                >
+                  {allPosts
+                    .filter((post) => post.postCategory === category)
+                    .map((post) => (
+                      <>
+                        <Link
+                          href={{
+                            pathname: `/post/${post.postSCAddress}&${post.postId}`,
+                            query: {
+                              postSCAddress: post.postSCAddress,
+                              post_Id: post.postId,
+                            },
                           }}
-                          bg={`url(https://ipfs.io/ipfs/${post.postImage})`}
-                          bgSize="cover"
-                          bgPosition="center"
-                          borderRadius="md"
-                          mb={2}
-                        />
-                        <Text fontSize="lg">{post.postTitle}</Text>
-                        <Text color={'gray.500'}>{post.postDescription}</Text>
-                        <Text color={'gray.450'}>
-                          By: {post.posterWalletAddress}
-                        </Text>
-                        <Text color={'gray.450'}>Posted: {}</Text>
-                      </Box>
-                    </GridItem>
-                    </Link>
-                    </>
-                  ))}
-              </Grid>
-            </Box>
+                        >
+                          <GridItem key={post.postId}>
+                            <Box borderRadius="md" p={4}>
+                              <Box
+                                w="100%"
+                                h="120px"
+                                transition="0.3s ease-in-out"
+                                _hover={{
+                                  transform: 'scale(1.05)',
+                                }}
+                                bg={`url(https://ipfs.io/ipfs/${post.postImage})`}
+                                bgSize="cover"
+                                bgPosition="center"
+                                borderRadius="md"
+                                mb={2}
+                              />
+                              <Text fontSize="lg">{post.postTitle}</Text>
+                              <Text color={'gray.500'}>
+                                {post.postDescription}
+                              </Text>
+                              <Text color={'gray.450'}>
+                                By: {post.posterWalletAddress}
+                              </Text>
+                              <Text color={'gray.450'}>Posted: {}</Text>
+                            </Box>
+                          </GridItem>
+                        </Link>
+                      </>
+                    ))}
+                </Grid>
+              </Box>
             </>
           ))}
         </VStack>
       </Container>
+      <Footer />
     </>
   )
 }

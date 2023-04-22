@@ -20,7 +20,7 @@ import {
   ModalOverlay,
   Spinner,
 } from '@chakra-ui/react'
-import { Navbar } from '@/components'
+import { Footer, Navbar } from '@/components'
 import { Web3Storage } from 'web3.storage'
 import { prepareWriteContract, writeContract } from '@wagmi/core'
 import { readContract } from '@wagmi/core'
@@ -101,8 +101,8 @@ const PostForm: React.FC = () => {
       functionName: 'getPostsData',
       args: [allPostsAddresses],
     })
-    setLatestCid(allPosts.postCID);
-    setNoOfPosts(allPosts.posterAddress.length);
+    setLatestCid(allPosts.postCID)
+    setNoOfPosts(allPosts.posterAddress.length)
     console.log('Got')
   }
 
@@ -110,7 +110,6 @@ const PostForm: React.FC = () => {
     e.preventDefault()
     setLoading(true)
 
-   
     try {
       await getAllPosts()
       const account = getAccount()
@@ -171,7 +170,7 @@ const PostForm: React.FC = () => {
       } else {
         console.log(`latestCid`)
         //get existing file data from ipfs link
-        console.log(latestCid);
+        console.log(latestCid)
         await getAllPosts()
 
         let config: any = {
@@ -182,7 +181,6 @@ const PostForm: React.FC = () => {
         const axiosResponse = await axios(config)
         const postDataObject: Post[] = axiosResponse.data
         console.log(noOfPosts)
-      
 
         let postObj: Post = {
           post_ID: noOfPosts,
@@ -319,6 +317,7 @@ const PostForm: React.FC = () => {
           </Card>
         </Box>
       </Container>
+      <Footer />
     </>
   )
 }

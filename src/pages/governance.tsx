@@ -1,4 +1,4 @@
-import { Navbar } from '@/components'
+import { Footer, Navbar } from '@/components'
 import { Heading } from '@chakra-ui/react'
 
 export const Governance = () => {
@@ -7,6 +7,8 @@ export const Governance = () => {
       <Navbar />
 
       <Heading textAlign={'center'}>Coming Sooon...</Heading>
+
+      <Footer />
     </>
   )
 }

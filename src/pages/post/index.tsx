@@ -1,14 +1,14 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 const RedirectPage = () => {
-  const router = useRouter();
+  const router = useRouter()
 
   useEffect(() => {
-    router.push("/articles");
-  }, []);
+    router.push('/articles')
+  }, [router])
 
-  return null;
-};
+  return null
+}
 
-export default RedirectPage;
+export default RedirectPage

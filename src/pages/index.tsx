@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { Center, Heading } from '@chakra-ui/react'
-import { Hero, Navbar } from '@/components'
+import { Footer, Hero, Navbar } from '@/components'
 import Features from '@/components/Features'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -20,6 +20,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <Features />
+      <Footer />
     </>
   )
 }

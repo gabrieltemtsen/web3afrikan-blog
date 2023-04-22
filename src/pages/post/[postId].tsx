@@ -27,7 +27,7 @@ import { readContract } from '@wagmi/core'
 import { Address } from 'wagmi'
 import axios from 'axios'
 import { getJSONFromCID } from '@/utils/gateway'
-import { getAccount,prepareWriteContract, writeContract } from '@wagmi/core'
+import { getAccount, prepareWriteContract, writeContract } from '@wagmi/core'
 import {
   BLOG_MANAGER_CONTRACT_ADDRESS,
   BLOG_MANAGER_ABI,
@@ -40,7 +40,6 @@ type Comment = {
   comment_content: string
 }
 
-
 type Post = {
   post_ID: number
   post_image: any
@@ -52,179 +51,140 @@ type Post = {
   comments: Comment[]
 }
 
-
-
-
-
-
-
 export const Post = () => {
+  const router = useRouter()
 
-  const router = useRouter();
+  const post = router.query.postSCAddress as Address
+  const post_id = router.query.post_Id as string
 
-  const post = router.query.postSCAddress as Address;
-  const post_id = router.query.post_Id as string;
+  const [postCID, setPostCID] = useState('')
+  const [latestCID, setLatestCID] = useState('')
+  const [title, setTitile] = useState('')
+  const [body, setBody] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
+  const [author, setAuthor] = useState('')
+  const [numberOfComments, setNumberOfcomments] = useState(0)
+  const [commentContent, setCommentContent] = useState('')
+  const [currentPostData, setCurrentPostData] = useState<Post>({
+    post_ID: 0,
+    post_image: '',
+    post_title: '',
+    post_description: '',
+    post_content: '',
+    post_category: '',
+    poster_address: '',
+    comments: [],
+  })
+  const [comments, setComments] = useState<Comment[]>([])
 
- const [postCID, setPostCID] = useState('');
- const [latestCID, setLatestCID] = useState('');
- const [title, setTitile] = useState('');
- const [body, setBody] = useState('');
- const [imageUrl, setImageUrl] = useState('');
- const [author, setAuthor] = useState('');
- const [numberOfComments, setNumberOfcomments] = useState(0);
- const [commentContent, setCommentContent] = useState('');
- const [currentPostData, setCurrentPostData] = useState<Post>({
-  post_ID: 0,
-  post_image: '',
-  post_title: '',
-  post_description: '',
-  post_content: '',
-  post_category: '',
-  poster_address: '',
-  comments: []
-});
- const [comments, setComments] = useState([])
-
- 
-
- const [description, setDescription] = useState('');
+  const [description, setDescription] = useState('')
 
   const getPostData = async () => {
-    const postCID: any = await readContract({
-      address: post,
-      abi: BLOG_POST_ABI,
-      functionName: 'postCID',
-    })
-    setPostCID(postCID)
-    const numComments: any = await readContract({
-      address: post,
-      abi: BLOG_POST_ABI,
-      functionName: 'commentListLength',
-    })
-    setNumberOfcomments(numComments.toNumber())
-    const comments: any = await readContract({
-      address: post,
-      abi: BLOG_POST_ABI,
-      functionName: 'getComments',
-    })
-    console.log(comments)
-    
+    if(!postCID) {
+      router.push('/article')
+    }
+    try {
+      const postCID: any = await readContract({
+        address: post,
+        abi: BLOG_POST_ABI,
+        functionName: 'postCID',
+      })
+      setPostCID(postCID)
+      const numComments: any = await readContract({
+        address: post,
+        abi: BLOG_POST_ABI,
+        functionName: 'commentListLength',
+      })
+      setNumberOfcomments(numComments.toNumber())
+
+      const comments: any = await readContract({
+        address: post,
+        abi: BLOG_POST_ABI,
+        functionName: 'getComments',
+      })
+      console.log(comments)
+      let new_comment = []
+      for (let i = 0; i < comments.length; i++) {
+        console.log(`COmment1`, comments[i])
+
+        let config: any = {
+          method: 'get',
+          url: `https://${comments[i]}.ipfs.w3s.link/post.json`,
+          headers: {},
+        }
+        const axiosResponse = await axios(config)
+        const data = axiosResponse.data
+
+        const commentData: Comment = {
+          comment_address: data.comment_address,
+          comment_content: data.comment_content,
+        }
+        new_comment.push(commentData)
+      }
+      setComments(new_comment)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-
-
-  const getPostDetails = async ()=> {
+  const getPostDetails = async () => {
     try {
       let config: any = {
         method: 'get',
         url: `https://${postCID}.ipfs.w3s.link/post.json`,
         headers: {},
       }
-      const axiosResponse = await axios(config);
-      const data = axiosResponse.data[post_id];
-      console.log(data)
+      const axiosResponse = await axios(config)
+      const data = axiosResponse.data[post_id]
       setCurrentPostData(data)
       setTitile(data.post_title)
       setBody(data.post_content)
       setImageUrl(data.post_image)
       setDescription(data.post_description)
       setAuthor(data.poster_address)
-      console.log(data.comments)
-      setComments(data.comments)
-     
-      
     } catch (error) {
-
       console.log(error)
-      
     }
-
-  
-
   }
-  const getLatestPostData = async () => {
-    console.log(`latestCID = `, latestCID)
-
-    let config: any = {
-      method: 'get',
-      url: `https://${latestCID}.ipfs.w3s.link/post.json`,
-      headers: {},
-    }
-    const axiosResponse = await axios(config);
-    const data = axiosResponse.data[post_id];
-
-    console.log(`Latest: `,data)
-
-  }
-  
-
-   const postComment = async (e: any) =>{
-    e.preventDefault();
-    const account = getAccount();
-    const storage = new Web3Storage({ token });
-
-    let config: any = {
-      method: "get",
-      url: `https://${postCID}.ipfs.w3s.link/post.json`,
-      headers: {},
-    };
-   
 
 
-    const axiosResponse = await axios(config);
-    const postDataObject: Post[] = axiosResponse.data;
-    
-
-    //filter and get the rest of the post data
-    let otherPostData: Post[] = postDataObject.filter(
-      (data) => data.post_ID !== Number(post_id));
-    
-    //filter out to get current post data to add comment object in
-    let getCurrentPostData: Post = postDataObject.filter(
-      (data) => data.post_ID === Number(post_id))[0];
-
+  const postComment = async (e: any) => {
+    e.preventDefault()
+    const account = getAccount()
+    const storage = new Web3Storage({ token })
     const userComment = {
       comment_address: account.address as Address,
       comment_content: commentContent,
-    };
-     getCurrentPostData.comments.push(userComment);
+    }
 
-     //add back current post data back into rest of the post data
-     otherPostData.push(getCurrentPostData);
-     console.log(`CurrentPostDATA,`, getCurrentPostData)
-     console.log(`otherPostDATA,`, otherPostData)
+    //store new JSON object in IPFS
+    const buffer = Buffer.from(JSON.stringify(userComment))
 
-     //store new JSON object in IPFS
-     const buffer = Buffer.from(JSON.stringify(otherPostData));
+    const newfile = [new File([buffer], 'post.json')]
+    const newCid = await storage.put(newfile)
+    console.log(`Posted comment to: `, newCid)
 
-     const newfile = [new File([buffer], "post.json")];
-     const newCid = await storage.put(newfile);
-     console.log(newCid);
-     setLatestCID(newCid);
+    const configure = await prepareWriteContract({
+      address: BLOG_MANAGER_CONTRACT_ADDRESS,
+      abi: BLOG_MANAGER_ABI,
+      functionName: 'addComment',
+      args: [newCid, post],
+    })
+    const data = await writeContract(configure)
 
-     
-     const configure = await prepareWriteContract({
-       address: BLOG_MANAGER_CONTRACT_ADDRESS,
-       abi: BLOG_MANAGER_ABI,
-       functionName: 'addComment',
-       args: [newCid, post],
-     })
-     const data = await writeContract(configure)
+    const tx = await data.wait()
+    getPostDetails()
+    getPostData
+  }
 
-     const tx = await data.wait()
-     getLatestPostData();
-     console.log(`yeah`);
-      getPostDetails();
-      getPostData
-     console.log(currentPostData)
- 
-
-   }
-   
-   useEffect(() => {
-    getPostData();
-    getPostDetails();
-  }, [postCID, numberOfComments])
+  useEffect(() => {
+    const updateData = async ()=>{
+      await getPostData()
+      await getPostDetails()
+    }
+    updateData();
+    
+  }, )
 
   return (
     <>
@@ -256,7 +216,6 @@ export const Post = () => {
                   src={`https://ipfs.io/ipfs/${imageUrl}`}
                   alt="some good alt text"
                   objectFit="contain"
-                 
                 />
               </Link>
             </Box>
@@ -298,37 +257,24 @@ export const Post = () => {
         <VStack paddingTop="40px" spacing="2" alignItems="flex-start">
           <Heading as="h2">{title}</Heading>
           <Text as="p" fontSize="lg" width={'89%'}>
-           {body}
+            {body}
           </Text>
-         
         </VStack>
         <Divider marginTop="5" mb={5} />
         <Heading> {numberOfComments} Comments</Heading>
-        
-     
-        {currentPostData.comments.map((data) => {
-          console.log(data)
+
+        {comments.map((data) => {
+          console.log(`all`, data)
+          console.log(`array length`, comments.length)
           return (
             <>
-            <Text>Comment by: {data.comment_address}</Text>
-            <Text>Comment: {data.comment_content} </Text>
-            <Divider marginTop="5" mb={5} />
+              <Text>Comment by: {data.comment_address}</Text>
+              <Text>Comment: {data.comment_content} </Text>
+              <Divider marginTop="5" mb={5} />
             </>
           )
-
-        }
-         
-          
-         
-        
-
-        )}
-         <Divider marginTop="5" mb={5} />
-     
-
-        
-
-       
+        })}
+        <Divider marginTop="5" mb={5} />
 
         <Heading> Add Comment</Heading>
 
