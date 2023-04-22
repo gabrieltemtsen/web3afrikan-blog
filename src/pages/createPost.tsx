@@ -19,6 +19,7 @@ import {
   ModalContent,
   ModalOverlay,
   Spinner,
+  useToast,
 } from '@chakra-ui/react'
 import { Footer, Navbar } from '@/components'
 import { Web3Storage } from 'web3.storage'
@@ -71,6 +72,7 @@ const PostForm: React.FC = () => {
   const [latestCid, setLatestCid] = useState<string>('')
   const [allPosts, setAllPosts] = useState<PostDetail[]>([])
   const [noOfPosts, setNoOfPosts] = useState<number>(0)
+  const toast = useToast()
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -86,6 +88,24 @@ const PostForm: React.FC = () => {
   const handleImageChange: any = (e: any) => {
     setImage(e.target.files[0])
     setFilename(URL.createObjectURL(e.target.files[0]))
+  }
+  const toastError = (msg: string) => {
+    return toast({
+      title: msg,
+      status: 'error',
+      duration: 9000,
+      isClosable: true,
+    })
+  }
+
+  const toastSuccess = (msg: string, description: string) => {
+    return toast({
+      title: msg,
+      description: description,
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
   }
 
   const getAllPosts = async () => {
@@ -112,7 +132,10 @@ const PostForm: React.FC = () => {
 
     try {
       await getAllPosts()
-      const account = getAccount()
+      const account = getAccount();
+      if(!account) {
+        return alert(`Please connect your wallet`)
+      }
       if (!title || !category || !body || !description || !image) {
         return alert('Fill all the Fields')
       }
@@ -154,6 +177,7 @@ const PostForm: React.FC = () => {
         const tx = await data.wait()
 
         if (tx) {
+          toastSuccess('Post Created!', 'Successfully created a post');
           console.log('Posted')
           setLoading(false)
           setLatestCid(cid)
@@ -161,7 +185,8 @@ const PostForm: React.FC = () => {
           await getAllPosts()
           setTitle('')
           setDescription('')
-          setBody('')
+          setBody('');
+          setCategory('')
           setImage({
             file: null,
             previewUrl: null,
@@ -213,6 +238,7 @@ const PostForm: React.FC = () => {
         const tx = await data.wait()
 
         if (tx) {
+          toastSuccess('Post Created!', 'Successfully created a post');
           console.log('Posted')
           setLoading(false)
           setLatestCid(cid)
@@ -227,6 +253,7 @@ const PostForm: React.FC = () => {
         }
       }
     } catch (error) {
+      toastError('Oops!, Something went wrong Try again');
       setLoading(false)
       console.log(error)
     }

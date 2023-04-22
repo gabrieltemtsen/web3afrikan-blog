@@ -18,6 +18,13 @@ import {
   FormLabel,
   Textarea,
   Button,
+  Modal,
+  Center,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  Spinner,
+  useToast,
 } from '@chakra-ui/react'
 import { Navbar } from '@/components'
 import { useRouter } from 'next/router'
@@ -56,9 +63,12 @@ export const Post = () => {
 
   const post = router.query.postSCAddress as Address
   const post_id = router.query.post_Id as string
+  const toast = useToast()
+
 
   const [postCID, setPostCID] = useState('')
   const [latestCID, setLatestCID] = useState('')
+  const [loading, setLoading] = useState(false)
   const [title, setTitile] = useState('')
   const [body, setBody] = useState('')
   const [imageUrl, setImageUrl] = useState('')
@@ -78,6 +88,24 @@ export const Post = () => {
   const [comments, setComments] = useState<Comment[]>([])
 
   const [description, setDescription] = useState('')
+  const toastError = (msg: string) => {
+    return toast({
+      title: msg,
+      status: 'error',
+      duration: 9000,
+      isClosable: true,
+    })
+  }
+
+  const toastSuccess = (msg: string, description: string) => {
+    return toast({
+      title: msg,
+      description: description,
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
+  }
 
   const getPostData = async () => {
     
@@ -150,8 +178,13 @@ export const Post = () => {
 
 
   const postComment = async (e: any) => {
-    e.preventDefault()
-    const account = getAccount()
+    e.preventDefault();
+    try {
+      setLoading(true)
+    const account = getAccount();
+    if(!account) {
+      return alert(`Please connect your wallet`)
+    }
     const storage = new Web3Storage({ token })
     const userComment = {
       comment_address: account.address as Address,
@@ -174,8 +207,21 @@ export const Post = () => {
     const data = await writeContract(configure)
 
     const tx = await data.wait()
+    toastSuccess('Comment Added', 'Successfully added comment')
     getPostDetails()
     getPostData
+    
+    setLoading(false)
+    setCommentContent('');
+      
+    } catch (error) {
+      toastError('Oops!, something went wrong, please try again')
+      setLoading(false)
+
+
+      
+    }
+    
   }
 
   useEffect(() => {
@@ -190,6 +236,29 @@ export const Post = () => {
   return (
     <>
       <Navbar />
+      <Modal
+        isOpen={loading}
+        onClose={() => {
+          !loading
+        }}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalBody>
+            <Center>
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="blue.500"
+                size="xl"
+              />
+            </Center>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
       <Container maxW={'7xl'} p="12">
         <Heading as="h6">Read Article</Heading>
         <Box
