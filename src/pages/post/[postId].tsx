@@ -284,7 +284,7 @@ export const Post = () => {
                 <Image
                   borderRadius="lg"
                   src={`https://ipfs.io/ipfs/${imageUrl}`}
-                  alt="some good alt text"
+                  alt="post_image"
                   objectFit="contain"
                 />
               </Link>

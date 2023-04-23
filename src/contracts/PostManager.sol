@@ -7,6 +7,7 @@ contract PostManager {
   Post[] public posts;
   mapping(address => uint256) public postIDs;
   string public CID; //Content Identifier
+  event CreatePost(address poster);
 
   function createPost(
     string memory _postCID
@@ -18,6 +19,7 @@ contract PostManager {
     posts.push(post);
     postIDs[address(post)] = postID;
     CID = _postCID;
+    emit CreatePost(msg.sender);
     return true;
   }
 

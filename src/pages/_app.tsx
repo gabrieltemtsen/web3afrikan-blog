@@ -3,7 +3,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import type { AppProps } from 'next/app'
 import '@rainbow-me/rainbowkit/styles.css'
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { configureChains, createClient, WagmiConfig } from 'wagmi'
+import { configureChains, createClient, goerli, WagmiConfig } from 'wagmi'
 import { sepolia } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
@@ -18,7 +18,7 @@ const colors = {
   },
 }
 const { chains, provider } = configureChains(
-  [sepolia],
+  [goerli],
   [
     alchemyProvider({ apiKey: 'ez0IGO__H3UGwJ4LPEjuLw3n1q7-GTWd' }),
     publicProvider(),
