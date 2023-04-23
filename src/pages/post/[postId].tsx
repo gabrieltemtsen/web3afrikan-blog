@@ -331,7 +331,7 @@ export const Post = () => {
           </Text>
         </VStack>
         <Divider marginTop="5" mb={5} />
-        <Heading> {numberOfComments} Comments</Heading>
+        <Heading> {numberOfComments} Comment(s)</Heading>
 
         {comments.map((data) => {
           console.log(`all`, data)

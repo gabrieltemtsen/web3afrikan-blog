@@ -11,6 +11,7 @@ import {
   Grid,
   GridItem,
   Center,
+  Progress,
 } from '@chakra-ui/react'
 import { Footer, Navbar } from '@/components'
 import { readContract } from '@wagmi/core'
@@ -102,6 +103,7 @@ const BlogPage = () => {
   const [latestCid, setLatestCid] = useState<string>('')
   const [allPosts, setAllPosts] = useState<PostDetail[]>([])
   const [noOfPosts, setNoOfPosts] = useState<number>(0)
+  const [isLoading, setIsLoading] = useState(true);
 
   const categories = Array.from(
     new Set(allPosts.map((post) => post.postCategory)),
@@ -159,7 +161,6 @@ const BlogPage = () => {
 
           const postDataObject: Post[] = axiosResponse.data
 
-          console.log(postDataObject)
 
           const getCurrentPostTitle = postDataObject.filter(
             (data) => data.post_ID === postId.toNumber(),
@@ -199,79 +200,93 @@ const BlogPage = () => {
     }
   }
   useEffect(() => {
-    getAllPosts()
+    getAllPosts();
+    const timeout = setTimeout(() => {
+      
+      setIsLoading(false);
+    }, 4500);
+
+    // Cleanup function to clear the timeout when the component unmounts
+    return () => clearTimeout(timeout);
+   
+
   }, [noOfPosts])
   return (
     <>
       <Navbar onSearchChange={handleSearchChange} />
-      <Container maxW="xl" mt={8}>
-        <VStack spacing={9}>
-          <Center>
-            <Heading as="h1" size="2xl">
-              Articles
-            </Heading>
-          </Center>
+      <Container maxW={'80%'} mt={8}>
+  <VStack spacing={10} align="stretch">
+    <Center>
+      <Heading as="h1" size="2xl">
+        Articles
+      </Heading>
+    </Center>
 
+    <div>
+      {isLoading ? (
+        <>
+          <Text>Loading Articles...</Text>
+          <Progress size="xs" isIndeterminate mb={5} />
+        </>
+      ) : (
+        <>
           {categories.map((category) => (
-            <>
-              <Box key={category}>
-                <Box borderBottom="1px" borderColor="gray.300" pb={2}>
-                  <Heading as="h2" size="lg">
-                    {category}
-                  </Heading>
-                </Box>
-                <Grid
-                  templateColumns="repeat(5, minmax(300px, 4fr))"
-                  gap={9}
-                  mt={4}
-                >
-                  {allPosts
-                    .filter((post) => post.postCategory === category)
-                    .map((post) => (
-                      <>
-                        <Link
-                          href={{
-                            pathname: `/post/${post.postSCAddress}&${post.postId}`,
-                            query: {
-                              postSCAddress: post.postSCAddress,
-                              post_Id: post.postId,
-                            },
-                          }}
-                        >
-                          <GridItem key={post.postId}>
-                            <Box borderRadius="md" p={4}>
-                              <Box
-                                w="100%"
-                                h="120px"
-                                transition="0.3s ease-in-out"
-                                _hover={{
-                                  transform: 'scale(1.05)',
-                                }}
-                                bg={`url(https://ipfs.io/ipfs/${post.postImage})`}
-                                bgSize="cover"
-                                bgPosition="center"
-                                borderRadius="md"
-                                mb={2}
-                              />
-                              <Text fontSize="lg">{post.postTitle}</Text>
-                              <Text color={'gray.500'}>
-                                {post.postDescription}
-                              </Text>
-                              <Text color={'gray.450'}>
-                                By: {post.posterWalletAddress}
-                              </Text>
-                              <Text color={'gray.450'}>Posted: {}</Text>
-                            </Box>
-                          </GridItem>
-                        </Link>
-                      </>
-                    ))}
-                </Grid>
+            <Box h={['auto', 'auto', 'auto']} key={category}>
+              <Box borderBottom="1px" borderColor="gray.300" pb={2}>
+                <Heading as="h2" size="lg">
+                  {category}
+                </Heading>
               </Box>
-            </>
+              <Grid
+                templateColumns={{base: 'repeat(1, 1fr)', md: 'repeat(2, minmax(300px, 4fr))', xl: 'repeat(5, minmax(300px, 4fr))'}}
+                gap={{base: 4, xl: 9}}
+                mt={4}
+              >
+                {allPosts
+                  .filter((post) => post.postCategory === category)
+                  .map((post) => (
+                    <Link
+                      href={{
+                        pathname: `/post/${post.postSCAddress}&${post.postId}`,
+                        query: {
+                          postSCAddress: post.postSCAddress,
+                          post_Id: post.postId,
+                        },
+                      }}
+                      key={post.postId}
+                    >
+                      <GridItem>
+                        <Box borderRadius="md" p={4}>
+                          <Box
+                            w="100%"
+                            h={{base: '160px', md: '120px', xl: '120px'}}
+                            transition="0.3s ease-in-out"
+                            _hover={{
+                              transform: 'scale(1.05)',
+                            }}
+                            bg={`url(https://ipfs.io/ipfs/${post.postImage})`}
+                            bgSize="cover"
+                            bgPosition="center"
+                            borderRadius="md"
+                            mb={2}
+                          />
+                          <Text fontSize="lg">{post.postTitle}</Text>
+                          <Text color={'gray.500'}>{post.postDescription}</Text>
+                          <Text color={'gray.450'}>By: {post.posterWalletAddress}</Text>
+                          <Text color={'gray.450'}>Posted: {}</Text>
+                        </Box>
+                      </GridItem>
+                    </Link>
+                  ))}
+              </Grid>
+            </Box>
           ))}
-        </VStack>
-      </Container>
+        </>
+      )}
+    </div>
+  </VStack>
+</Container>
+
       <Footer />
     </>
   )
