@@ -273,7 +273,7 @@ const BlogPage = () => {
                           <Text fontSize="lg">{post.postTitle}</Text>
                           <Text color={'gray.500'}>{post.postDescription}</Text>
                           <Text color={'gray.450'}>By: {post.posterWalletAddress}</Text>
-                          <Text color={'gray.450'}>Posted: {}</Text>
+                          {/* <Text color={'gray.450'}>Posted: {}</Text> */}
                         </Box>
                       </GridItem>
                     </Link>
